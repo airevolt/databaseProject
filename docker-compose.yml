@@ -1,0 +1,13 @@
+version: '3'
+services:
+  api:
+    image: ecommerce-app
+    build: .
+    networks:
+      - backend
+    ports:
+      - "4000:4000"
+
+networks:
+  backend:
+    driver: bridge

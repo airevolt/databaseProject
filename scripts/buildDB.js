@@ -8,7 +8,7 @@ const usersModel = require("../models/users");
         user: 'postgres',
         host: 'localhost',
         database: 'galvanize',
-        password: 'bluebolt10128',
+        password: 'galvanize',
         port: 5432,
     })
 

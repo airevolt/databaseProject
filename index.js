@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express();
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 4000;
 const modelRoute = require('./routes/modelRoutes');
 const customerModel = require('./models/customers');
 const itemModel = require('./models/items');
@@ -8,15 +8,30 @@ const manufacturerModel = require('./models/manufacturers');
 const purchaseModel = require('./models/purchaseOrder');
 const salesModel = require('./models/salesorder');
 const userModel = require('./models/users');
+const { log, ExpressAPILogMiddleware } = require('@rama41222/node-logger');
+
+const config = {
+    name: 'ecommerce-app',
+    port: 4000,
+    host: '127.0.0.1',
+};
+
+const logger = log({ console: true, file: false, label: config.name });
 
 const pg = require('pg');
+let allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Headers', "*");
+    next();
+  }
+  app.use(allowCrossDomain);
 
 const Pool = pg.Pool
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'galvanize',
-    password: 'password',
+    password: 'galvanize',
     port: 5432,
 })
 
@@ -36,6 +51,13 @@ app.get((error, req, res, next) => {
     }
 })
 
-app.listen(port, (error) => {
-    console.log("started!")
-})
+// app.listen(port, (error) => {
+//     console.log("Container is running!")
+// })
+
+app.listen(config.port, config.host, (e)=> {
+    if(e) {
+        throw new Error('Internal Server Error');
+    }
+    logger.info(`${config.name} running on ${config.host}:${config.port}`);
+});
